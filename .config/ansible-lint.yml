@@ -2,8 +2,6 @@
 
 profile: production
 
-offline: true
-
 skip_list:
   - var-naming[no-role-prefix]
 
