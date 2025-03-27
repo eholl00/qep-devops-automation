@@ -1,3 +1,4 @@
 ve-mkdocs-dev/
 .cache/
 .vscode/
+.ansible/
