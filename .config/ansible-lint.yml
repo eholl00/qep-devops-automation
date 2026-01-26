@@ -2,6 +2,8 @@
 
 profile: production
 
+offline: true
+
 skip_list:
   - var-naming[no-role-prefix]
 
@@ -9,6 +11,8 @@ mock_modules:
   - ansible.controller.project
   - ansible.controller.job_template
   - ansible.controller.host
+  - ansible.controller.workflow_job_template
+  - ansible.controller.workflow_launch
 
 exclude_paths:
   - mkdocs.yml
