@@ -2,4 +2,4 @@
 
 webserver_owner: Teilnehmer
 
-index_template: welcome-simple.html.j2
+index_template: welcome-ascii.html.j2

@@ -1,11 +1,5 @@
 ---
 
-- name: Install webserver
-  ansible.builtin.package:
-    name: httpd
-    state: present
-  become: true
-
 - name: Copy index.html template
   ansible.builtin.template:
     src: "{{ index_template }}"
@@ -13,12 +7,6 @@
     owner: apache
     group: apache
     mode: "0644"
-  become: true
-
-- name: Start webserver
-  ansible.builtin.service:
-    name: httpd
-    state: started
   become: true
 
 - name: Get webserver content
@@ -29,4 +17,4 @@
 
 - name: Output content of index page
   ansible.builtin.debug:
-    msg: "{{ webserver_index.content }}"
+    msg: "{{ webserver_index.content | split('\n') }}"

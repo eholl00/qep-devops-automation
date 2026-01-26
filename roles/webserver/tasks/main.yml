@@ -1,0 +1,13 @@
+---
+
+- name: Install webserver
+  ansible.builtin.package:
+    name: httpd
+    state: present
+  become: true
+
+- name: Start webserver
+  ansible.builtin.service:
+    name: httpd
+    state: started
+  become: true
