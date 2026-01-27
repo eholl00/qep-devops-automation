@@ -64,7 +64,7 @@ git add variables.yml
 
 Anschließend sieht der Output vom `git status` Kommando etwas anders aus:
 
-![Git Status with file for Commit](assets/images/GitStatusToCommited.png)
+![Git Status with file for Commit](assets/images/GitStatusToBeCommited.png)
 
 Jetzt wird die Änderung *commited*. Damit alle weiteren Entwickler auch wissen, welche Veränderung am Code vorgenommen wurde, solltest du dem *Commit* eine entsprechende Nachricht (*Message*) mitgeben.
 
@@ -102,14 +102,14 @@ Nachdem du Git deine Identität mitgeteilt hast, kannst du den *Commit* noch ein
 Mit der ++arrow-up++-Taste kannst du zum vorherigen Kommando zurück, sobald du es erreicht hast, einfach mit ++enter++ bestätigen.
 
 ```console
-[student1@ansible-1 qep]$ git commit -m "Added new name to attendee_list"
-[feature/eslem 4dea3cf] Added new name to attendee_list
+[student1@ansible-1 qep-devops-automation]$ git commit -m "Added new name to attendee_list."
+[dev 69c46fc] Added new name to attendee_list.
  1 file changed, 1 insertion(+)
 ```
 
 Das sieht gut aus, du hast deine Änderung *lokal* versionskontrolliert. Im nächsten Schritt werden wir die Änderung im Github-Repository veröffentlichen.
 
-## 3. Branch veröffentlichen
+## 3. Änderungen veröffentlichen
 
 Nachdem du die gewünschten Änderungen am Code vorgenommen hast und lokal versionskontrolliert hast, muss sie jetzt auch veröffentlicht werden.  
 
@@ -119,23 +119,7 @@ Führe das folgende Kommando aus:
 git push -u origin
 ```
 
-!!! failure "Noch eine Fehlermeldung?"  
-    Auch das war zu erwwarten, das *Remote*-Repository auf Github kennt deinen Branch noch gar nicht!
-
-Du musst Git mitteilen, welcher *Remote*-Branch zu seinem lokalen Branch gehört (du erstellst einen sogenannten *Tracking-Branch*). Auch hier gibt die Fehlermeldung wieder einen Lösungsvorschlag vor, den kannst du wieder kopieren (mit *Strg* + *C*) und ausführen.
-
-??? success "Hilfe benötigt?"
-    Hier ist das Kommando noch einmal:
-
-    ```console
-    git push --set-upstream origin feature/eslem
-    ```
-
-    > **Bei mir heißt der Branch lokal natürlich anders als bei dir, hinterlege deinen eigenen Branch `fature/name`.**
-
-Der Output gibt an, dass der Branch veröffentlicht wurde, unter dem folgenden Link siehst du jetzt auch im Github deinen Branch mit deinen Code-Änderungen:
-
-[https://github.com/TimGrt/qep/branches](https://github.com/TimGrt/qep/branches){ target=_blank }
+Der Code ist jetzt im *Remote Repository*, sieh' in deinem Github Repository nach.
 
 ## 4. Pull Request erstellen
 
