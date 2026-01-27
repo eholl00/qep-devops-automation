@@ -2,4 +2,5 @@ ve-docs-dev/
 .cache/
 .vscode/
 .ansible/
+site/
 logs/
