@@ -1,10 +1,8 @@
 ---
-
 - name: Prepare Automation Controller
   hosts: localhost
   connection: local
-  vars_files:
-    - variables.yml
+  gather_facts: false
   pre_tasks:
     - name: Ensure required connection variables are defined
       ansible.builtin.assert:
@@ -18,42 +16,80 @@
         quiet: true
         fail_msg: "Variables for accessing Automation controller are missing! Export the variables."
   tasks:
-    - name: Add project with content for QEP
-      awx.awx.project:
-        name: QEP Repository
-        organization: Default
-        scm_type: git
-        scm_url: https://github.com/TimGrt/qep.git
-        scm_branch: dev
-        scm_update_on_launch: true
-
     - name: Ensure all hosts from web group are enabled
-      awx.awx.host:
+      ansible.controller.host:
+        controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
         name: "{{ item }}"
         inventory: Workshop Inventory
         enabled: true
+        validate_certs: true
       loop:
         - node1
         - node2
         - node3
 
-    - name: Add Job Template for Webserver Deployment with Survey
-      awx.awx.job_template:
-        name: Webserver Deployment
-        description: Personalisierter Webserver für das QEP
+    - name: Create job template for webserver installation
+      ansible.controller.job_template:
+        controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+        name: Webserver Installation
+        job_type: run
         inventory: Workshop Inventory
         project: QEP Repository
+        execution_environment: Default execution environment
         playbook: playbook_webserver_deployment.yml
         credentials:
           - Workshop Credentials
-        survey_enabled: true
-        survey_spec:
-          name: Webserver Deployment Survey
-          description: Survey Spezifikation für Webserver Deployment Template
-          spec:
-            - question_name: Für wen soll der Webserver personalisiert werden?
-              required: true
-              type: multiplechoice
-              choices: "{{ attendee_list }}"
-              variable: webserver_owner
-              default: ""
+        limit: web
+        become_enabled: true
+
+    - name: Create job template to deploy webserver content
+      ansible.controller.job_template:
+        controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+        name: Webserver Content
+        job_type: run
+        inventory: Workshop Inventory
+        project: QEP Repository
+        execution_environment: Default execution environment
+        playbook: playbook_deploy_welcome.yml
+        credentials:
+          - Workshop Credentials
+        limit: web
+        become_enabled: true
+
+    - name: Create workflow for infrastructure setup and webserver content deployment
+      ansible.controller.workflow_job_template:
+        controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+        controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+        controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+        name: Deploy Webserver
+        destroy_current_nodes: true
+        workflow_nodes:
+          - identifier: Approve Deployment
+            unified_job_template:
+              name: Approve Deployment
+              type: workflow_approval
+            related:
+              success_nodes:
+                - identifier: Web App Deploy
+          - identifier: Webserver Installation
+            unified_job_template:
+              name: Webserver Installation
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: Node.js Deploy
+          - identifier: Deploy Webserver Content
+            unified_job_template:
+              name: Webserver Content
+              type: job_template
+
+    - name: Launch workflow
+      ansible.controller.workflow_launch:
+        workflow_template: Deploy Webserver
+        wait: false

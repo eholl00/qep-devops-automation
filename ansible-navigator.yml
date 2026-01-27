@@ -1,0 +1,18 @@
+---
+ansible-navigator:
+  execution-environment:
+    image: registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel8:latest
+    pull:
+      policy: missing
+    environment-variables:
+      pass:
+        - CONTROLLER_HOST
+        - CONTROLLER_USERNAME
+        - CONTROLLER_PASSWORD
+  logging:
+    level: warning
+    file: logs/ansible-navigator.log
+  mode: stdout
+  playbook-artifact:
+    enable: true
+    save-as: "logs/{playbook_status}-{playbook_name}-{time_stamp}.json"
