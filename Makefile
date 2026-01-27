@@ -10,7 +10,7 @@ COLOUR_YELLOW:=$(shell tput setaf 3)
 COLOUR_BLUE:=$(shell tput setaf 4)
 COLOUR_END:=$(shell tput sgr0)
 
-VENV_NAME?=ve-mkdocs-dev
+VENV_NAME?=ve-docs-dev
 PYTHON=${VENV_NAME}/bin/python
 
 help:  ## Display this help
@@ -36,12 +36,14 @@ ifeq ("$(wildcard .git/hooks/pre-commit)","")
 	@${PYTHON} -m pre_commit install && echo -e "$(COLOUR_GREEN)## Hooks installed.$(COLOUR_END)"
 endif
 
-serve:  ## Output instructions for running MkDocs development server
+serve:  ## Output instructions for running Zensical development server
 ifneq ($(shell pwd)/$(PYTHON), $(shell which python))
 	@echo -e "$(COLOUR_YELLOW)## Python VE is not activated!$(COLOUR_END)"
-	@echo -e "$(COLOUR_GREEN)## Run$(COLOUR_END) source $(VENV_NAME)/bin/activate $(COLOUR_GREEN)first.$(COLOUR_END)"
+	@echo -e "$(COLOUR_GREEN)## Run the following command: $(COLOUR_END)"
+	@echo -e "source $(VENV_NAME)/bin/activate"
 endif
-	@echo -e "$(COLOUR_GREEN)## Run$(COLOUR_END) mkdocs serve -o$(COLOUR_GREEN) for a live preview.$(COLOUR_END)"
+	@echo -e "$(COLOUR_GREEN)## Run the following command for a live preview.$(COLOUR_END)"
+	@echo -e "zensical serve"
 
 clean: ## Cleanup the project folders
 	$(info $(COLOUR_BLUE)## Cleaning up things...$(COLOUR_END))

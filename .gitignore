@@ -1,4 +1,6 @@
-ve-mkdocs-dev/
+ve-docs-dev/
 .cache/
 .vscode/
 .ansible/
+site/
+logs/

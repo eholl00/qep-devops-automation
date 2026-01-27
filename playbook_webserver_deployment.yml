@@ -1,6 +1,6 @@
 ---
 
-- name: Deploy webserver with personalized index page
+- name: Deploy webserver
   hosts: web
   roles:
-    - welcome
+    - webserver
