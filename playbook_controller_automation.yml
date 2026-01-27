@@ -3,6 +3,8 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars_files:
+    - variables.yml
   pre_tasks:
     - name: Ensure required connection variables are defined
       ansible.builtin.assert:
@@ -61,6 +63,18 @@
           - Workshop Credentials
         limit: web
         become_enabled: true
+        survey_enabled: true
+        survey_spec:
+          name: Webserver Deployment Survey
+          description: Survey Spezifikation für Webserver Deployment Template
+          spec:
+            - question_name: Für wen soll der Webserver personalisiert werden?
+              required: true
+              type: multiplechoice
+              choices: "{{ attendee_list }}"
+              variable: webserver_owner
+              default: ""
+
 
     - name: Create workflow for infrastructure setup and webserver content deployment
       ansible.controller.workflow_job_template:
@@ -68,15 +82,18 @@
         controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
         controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
         name: Deploy Webserver
-        destroy_current_nodes: true
+        survey_enabled: true
+        survey_spec:
+          name: Webserver Deployment Survey
+          description: Survey Spezifikation für Webserver Deployment Template
+          spec:
+            - question_name: Für wen soll der Webserver personalisiert werden?
+              required: true
+              type: multiplechoice
+              choices: "{{ attendee_list }}"
+              variable: webserver_owner
+              default: ""
         workflow_nodes:
-          - identifier: Approve Deployment
-            unified_job_template:
-              name: Approve Deployment
-              type: workflow_approval
-            related:
-              success_nodes:
-                - identifier: Webserver Installation
           - identifier: Webserver Installation
             unified_job_template:
               name: Webserver Installation
@@ -88,8 +105,3 @@
             unified_job_template:
               name: Webserver Content
               type: job_template
-
-    - name: Launch workflow
-      ansible.controller.workflow_launch:
-        workflow_template: Deploy Webserver
-        wait: false
