@@ -1,0 +1,22 @@
+{
+    "name": "Ansible Community Call DevContainer",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/features/python:1": {
+            "toolsToInstall": "pipenv,virtualenv,ansible-core,ansible-lint"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "redhat.ansible",
+                "redhat.vscode-yaml",
+                "vscode-icons-team.vscode-icons"
+            ],
+            "settings": {
+                "workbench.colorTheme": "Default Dark+",
+                "workbench.iconTheme": "vscode-icons"
+            }
+        }
+    }
+}
