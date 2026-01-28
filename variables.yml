@@ -5,3 +5,6 @@ package: httpd
 attendee_list:
   - Tim Grützmacher
   - Eslem Bayraktar
+  - Gesa Römer
+  - Mickey Mouse
+  - Ansible Wonderwoman
